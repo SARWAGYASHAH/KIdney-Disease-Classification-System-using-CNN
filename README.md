@@ -1,1 +1,1 @@
-# Potato-Disease-Classification-System-using-CNN
+# Kidney-Disease-Classification-System-using-CNN
