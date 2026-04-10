@@ -3,7 +3,8 @@ import zipfile
 import shutil
 import gdown
 from cnnClassifier import logger
-from cnnClassifier.entity import DataIngestionConfig
+from cnnClassifier.utils.common import get_size
+from cnnClassifier.entity.config_entity import DataIngestionConfig
 
 
 class DataIngestion:
@@ -12,26 +13,33 @@ class DataIngestion:
         logger.info("DataIngestion object created")
 
     def download_file(self) -> str:
-        """Fetch data from the URL"""
-
-        try:
+        '''
+        Fetch data from the url and store it in the zip file then later in the pipeline got unzipped
+        '''
+    
+        try: 
             dataset_url = self.config.source_URL
             zip_download_dir = self.config.local_data_file
-
-            logger.info(f"Starting download from: {dataset_url}")
-            logger.info(f"Saving file to: {zip_download_dir}")
-
-            os.makedirs(self.config.root_dir, exist_ok=True)
-
+    
+            os.makedirs("artifacts/data_ingestion", exist_ok=True)
+    
+            # ✅ ADD THIS CHECK
+            if os.path.exists(zip_download_dir):
+                logger.info(f"File already exists at {zip_download_dir}. Skipping download.")
+                return zip_download_dir
+    
+            logger.info(f"Downloading data from {dataset_url} into file {zip_download_dir}")
+    
             file_id = dataset_url.split("/")[-2]
-            prefix = "https://drive.google.com/uc?/export=download&id="
-
-            gdown.download(prefix + file_id, zip_download_dir, quiet=False)
-
-            logger.info("Download completed successfully")
-
+            prefix = 'https://drive.google.com/uc?/export=download&id='
+    
+            gdown.download(prefix + file_id, zip_download_dir)
+    
+            logger.info(f"Downloaded data from {dataset_url} into file {zip_download_dir}")
+    
+            return zip_download_dir
+    
         except Exception as e:
-            logger.error("Error occurred during file download")
             raise e
 
     def extract_zip_file(self):

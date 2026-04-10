@@ -4,7 +4,8 @@ from cnnClassifier.entity.config_entity import DataIngestionConfig
 from cnnClassifier import logger
 
 
-class ConfigurationManager:
+class ConfigurationManager:## this class read the hard coded values via some variable
+    '''this class read the paths which where hard coded and creats the required directaries'''
     def __init__(
         self,
         config_filepath=CONFIG_FILE_PATH,
@@ -27,6 +28,7 @@ class ConfigurationManager:
 
 
     def get_data_ingestion_config(self) -> DataIngestionConfig:
+        '''this returns the path of various directaries'''
         try:
             logger.info("Preparing Data Ingestion Configuration")
 
