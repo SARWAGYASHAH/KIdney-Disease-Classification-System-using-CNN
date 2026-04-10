@@ -1,119 +1,49 @@
-# ------------------------------
-
-# Python cache files
-
-# ------------------------------
-
-**pycache**/
+# Python
+__pycache__/
 *.py[cod]
-*$py.class
 
-# ------------------------------
-
-# Virtual environments
-
-# ------------------------------
-
+# Environments
 venv/
 env/
-ENV/
 .venv/
 
-# ------------------------------
-
-# Build / distribution
-
-# ------------------------------
-
+# Build
 build/
 dist/
-*.egg-info/
-.eggs/
-
-# ------------------------------
 
 # Logs
-
-# ------------------------------
-
 *.log
 
-# ------------------------------
-
-# Jupyter Notebook
-
-# ------------------------------
-
+# Jupyter
 .ipynb_checkpoints/
 
-# ------------------------------
-
-# Environment variables
-
-# ------------------------------
-
+# Env vars
 .env
 
-# ------------------------------
-
-# DVC
-
-# ------------------------------
-
-.dvc/cache/
-.dvc/tmp/
-
-# ------------------------------
-
-# MLflow
-
-# ------------------------------
-
+# ML artifacts
 mlruns/
-
-# ------------------------------
-
-# Model files
-
-# ------------------------------
-
 *.h5
-*.hdf5
 *.pkl
-*.joblib
-*.model
 
-# ------------------------------
-
-# Dataset files
-
-# ------------------------------
-
+# Data (optional)
 data/
 artifacts/
 
-# ------------------------------
-
-# VS Code
-
-# ------------------------------
-
+# IDE
 .vscode/
 
-# ------------------------------
-
-# OS generated files
-
-# ------------------------------
-
+# OS
 .DS_Store
 Thumbs.db
+artifacts/
+*.zip
+*.csv
+*.h5
+*.pkl
 
-# ------------------------------
-
-# Temporary files
-
-# ------------------------------
-
-*.tmp
-*.swp
+research/*.zip
+research/*.csv
+research/*.jpg
+research/*.png
+research/*.nii
+research/*.dcm
