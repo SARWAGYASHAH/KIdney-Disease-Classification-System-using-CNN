@@ -19,3 +19,16 @@ class PrepareBaseModelConfig:
     params_include_top: bool
     params_weights: str
     params_classes: int
+
+
+@dataclass
+class ModelTrainerConfig:
+    root_dir: Path
+    training_data: Path
+    validation_data: Path
+    trained_model_path: Path
+    updated_base_model_path: Path   # 🔥 ADD THIS
+    params_epochs: int
+    params_batch_size: int
+    params_image_size: list
+    params_augmentation: bool

@@ -2,6 +2,7 @@ from cnnClassifier.constants import *
 from cnnClassifier.utils.common import read_yaml, create_directories
 from cnnClassifier.entity.config_entity import DataIngestionConfig,PrepareBaseModelConfig
 from cnnClassifier import logger
+from cnnClassifier.entity.config_entity import ModelTrainerConfig
 
 
 class ConfigurationManager:## this class read the hard coded values via some variable
@@ -51,7 +52,29 @@ class ConfigurationManager:## this class read the hard coded values via some var
         except Exception as e:
             logger.error("Error while creating Data Ingestion Configuration")
             raise e
-    
+    def get_model_trainer_config(self):
+        config = self.config.model_trainer
+        params = self.params
+
+        create_directories([config.root_dir])
+
+        return ModelTrainerConfig(
+            root_dir=Path(config.root_dir),
+            training_data=Path(config.training_data),
+            validation_data=Path(config.validation_data),
+            trained_model_path=Path(config.trained_model_path),
+        
+            # 🔥 ADD THIS LINE
+            updated_base_model_path=Path(
+                self.config.prepare_base_model.updated_base_model_path
+            ),
+        
+            params_epochs=self.params.EPOCHS,
+            params_batch_size=self.params.BATCH_SIZE,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_augmentation=self.params.AUGMENTATION
+        )
+
     def get_prepare_base_model_config(self) -> PrepareBaseModelConfig:
         '''this function return the the model params and the paths of the model stored'''
         config = self.config.prepare_base_model

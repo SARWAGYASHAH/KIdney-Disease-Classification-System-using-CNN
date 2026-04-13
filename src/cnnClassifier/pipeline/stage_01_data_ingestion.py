@@ -7,7 +7,7 @@ STAGE_NAME = "Data Ingestion Stage"
 
 
 class DataIngestionTrainingPipeline:
-    '''this class makes directories required for data ingestion and downloads the data and then unzips it'''
+    '''this class handles downloading, extracting and splitting data'''
 
     def __init__(self):
         pass
@@ -23,40 +23,41 @@ class DataIngestionTrainingPipeline:
             logger.info("Initializing Data Ingestion Component")
             data_ingestion = DataIngestion(config=data_ingestion_config)
 
-            # ✅ PATHS
-            zip_path = data_ingestion_config.local_data_file
-            unzip_dir = os.path.dirname(zip_path)
+            # PATHS
+            unzip_dir = data_ingestion_config.unzip_dir
 
-            # ✅ DOWNLOAD (safe: already has check inside)
+            # DOWNLOAD
             logger.info("Starting data download")
             data_ingestion.download_file()
 
-            # ✅ EXTRACT ONLY IF NOT ALREADY DONE
+            # EXTRACT ONLY IF NEEDED
             if not os.path.exists(unzip_dir) or len(os.listdir(unzip_dir)) == 0:
-                logger.info("Starting data extraction")
+                logger.info("Extracting dataset")
                 data_ingestion.extract_zip_file()
             else:
                 logger.info("Data already extracted. Skipping extraction.")
 
-            # ✅ FLATTEN ONLY IF NEEDED
-            expected_folder = os.path.join(unzip_dir, "train")  # 🔁 change if needed
+            # SPLIT DATA (ONLY ONCE)
+            train_dir = os.path.join(unzip_dir, "train")
+            valid_dir = os.path.join(unzip_dir, "valid")
 
-            if not os.path.exists(expected_folder):
-                logger.info("Fixing folder structure")
-                data_ingestion.flatten_folder()
+            if not (os.path.exists(train_dir) and os.path.exists(valid_dir)):
+                logger.info("Splitting dataset into train and validation")
+                data_ingestion.split_data()
             else:
-                logger.info("Folder structure already correct. Skipping flattening.")
+                logger.info("Dataset already split. Skipping splitting.")
 
             logger.info("Data ingestion completed successfully")
 
         except Exception as e:
             logger.error("Error in Data Ingestion Pipeline")
+            logger.exception(e)
             raise e
 
 
 if __name__ == "__main__":
     try:
-        logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+        logger.info(f"\n\n>>>>>> stage {STAGE_NAME} started <<<<<<")
 
         obj = DataIngestionTrainingPipeline()
         obj.main()
