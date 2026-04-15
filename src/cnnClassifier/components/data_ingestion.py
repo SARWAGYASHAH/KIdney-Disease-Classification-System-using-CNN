@@ -102,9 +102,9 @@ class DataIngestion:
             base_path = self.config.unzip_dir
 
             dataset_path = os.path.join(
-                base_path,
-                "CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone"
-            )
+              base_path,
+              "CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone",
+              "CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
 
             train_dir = os.path.join(base_path, "train")
             valid_dir = os.path.join(base_path, "valid")

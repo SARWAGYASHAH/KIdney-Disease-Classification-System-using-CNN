@@ -14,6 +14,10 @@ class ModelTrainer:
             model = tf.keras.models.load_model(
                 self.config.updated_base_model_path
             )
+            model.compile(
+              optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+              loss="categorical_crossentropy",
+              metrics=["accuracy"])
 
             logger.info("Model loaded successfully")
 
