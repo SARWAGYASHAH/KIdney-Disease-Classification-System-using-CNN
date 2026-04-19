@@ -1,49 +1,12 @@
-# Python
+*.keras
+*.h5
+artifacts/
 __pycache__/
-*.py[cod]
-
-# Environments
+*.pyc
+.env
 venv/
-env/
-.venv/
-
-# Build
+logs/
+.ipynb_checkpoints/
 build/
 dist/
-
-# Logs
-*.log
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Env vars
-.env
-
-# ML artifacts
-mlruns/
-*.h5
-*.pkl
-
-# Data (optional)
-data/
-artifacts/
-
-# IDE
-.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
-artifacts/
-*.zip
-*.csv
-*.h5
-*.pkl
-
-research/*.zip
-research/*.csv
-research/*.jpg
-research/*.png
-research/*.nii
-research/*.dcm
+*.egg-info/

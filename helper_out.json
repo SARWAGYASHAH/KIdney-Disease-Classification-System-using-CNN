@@ -1,0 +1,1 @@
+{"class": "Cyst", "confidence": 0.9377926588058472, "confidence_percent": 93.78, "probabilities": {"Cyst": 0.9377926588058472, "Normal": 0.01761685684323311, "Stone": 0.025249499827623367, "Tumor": 0.019341006875038147}, "inference_time_ms": 1081.64}

@@ -1,50 +1,1163 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Test Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Renalyze | AI Kidney Scan Classifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #061019;
+      --bg-soft: #091724;
+      --panel: rgba(12, 25, 38, 0.94);
+      --panel-strong: rgba(15, 31, 47, 0.97);
+      --line: rgba(162, 190, 223, 0.16);
+      --text: #eef6ff;
+      --muted: #9cb5cb;
+      --accent: #3bd1ff;
+      --accent-strong: #1596dc;
+      --accent-soft: rgba(59, 209, 255, 0.12);
+      --good: #44dd93;
+      --warning: #f4c16b;
+      --danger: #ff8791;
+      --stone: #7fc3ff;
+      --shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+    }
 
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 100px;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        h1 {
-            color: #00ffcc;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        p {
-            font-size: 18px;
-        }
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(59, 209, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 100% 0%, rgba(68, 221, 147, 0.10), transparent 22%),
+        linear-gradient(180deg, #051018 0%, #08131d 52%, #061018 100%);
+      padding: 20px 18px 24px;
+    }
 
-        button {
-            background-color: #00ffcc;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+    .app-shell {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
 
-        button:hover {
-            background-color: #00cc99;
-        }
-    </style>
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .brand-panel,
+    .snapshot-panel,
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16, 31, 46, 0.96), rgba(9, 20, 31, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .brand-panel {
+      border-radius: 28px;
+      padding: 20px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-panel::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(59, 209, 255, 0.18), transparent 65%);
+      pointer-events: none;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: #c9ddf0;
+      font-size: 13px;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--good);
+      box-shadow: 0 0 12px rgba(68, 221, 147, 0.55);
+    }
+
+    .support-chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(59, 209, 255, 0.08);
+      color: #c8e8fa;
+      border: 1px solid rgba(59, 209, 255, 0.18);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .brand-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+      max-width: 720px;
+      margin-bottom: 10px;
+    }
+
+    .brand-title span {
+      display: block;
+      background: linear-gradient(135deg, #eef6ff 0%, #84e6ff 45%, #75efc2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .brand-copy {
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.62;
+      font-size: 14px;
+    }
+
+    .quick-stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .mini-chip {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #d7e9fb;
+      font-size: 12px;
+    }
+
+    .mini-chip strong {
+      display: block;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .snapshot-panel {
+      border-radius: 28px;
+      padding: 18px;
+    }
+
+    .snapshot-panel h2 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #d6e8fb;
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .snapshot-item {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .snapshot-item span {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .snapshot-item strong {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(350px, 0.95fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      border-radius: var(--radius-xl);
+      padding: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #cae6fa;
+      background: rgba(59, 209, 255, 0.08);
+      border: 1px solid rgba(59, 209, 255, 0.16);
+    }
+
+    .upload-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 200px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .drop-zone {
+      border: 1.5px dashed rgba(127, 223, 255, 0.30);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top center, rgba(59, 209, 255, 0.12), transparent 48%),
+        linear-gradient(180deg, rgba(10, 23, 35, 0.98), rgba(8, 18, 28, 0.98));
+      padding: 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      min-height: 212px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragging {
+      transform: translateY(-2px);
+      border-color: rgba(127, 223, 255, 0.56);
+      background:
+        radial-gradient(circle at top center, rgba(59, 209, 255, 0.18), transparent 52%),
+        linear-gradient(180deg, rgba(11, 29, 43, 0.99), rgba(8, 20, 30, 0.99));
+    }
+
+    .drop-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(59, 209, 255, 0.22), rgba(117, 239, 194, 0.14));
+      border: 1px solid rgba(127, 223, 255, 0.20);
+      font-size: 30px;
+      font-weight: 600;
+    }
+
+    .drop-zone h3 {
+      font-size: 28px;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .drop-zone p {
+      max-width: 510px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .button {
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 13px 20px;
+      font-weight: 700;
+      transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button:disabled {
+      opacity: 0.58;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #03101a;
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .meta-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .meta-card {
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      min-height: 74px;
+    }
+
+    .meta-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .preview-box {
+      margin-top: 14px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      min-height: 240px;
+      max-height: 320px;
+      background:
+        linear-gradient(180deg, rgba(7, 14, 21, 0.98), rgba(10, 20, 31, 0.96)),
+        linear-gradient(135deg, rgba(59, 209, 255, 0.06), transparent 50%);
+      display: grid;
+      place-items: center;
+    }
+
+    .preview-placeholder {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .preview-placeholder strong {
+      display: block;
+      color: #dcedff;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    #previewImage {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #071018;
+    }
+
+    .note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .right-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .result-hero {
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 16px;
+      background:
+        radial-gradient(circle at top right, rgba(59, 209, 255, 0.14), transparent 32%),
+        linear-gradient(180deg, rgba(18, 37, 55, 0.96), rgba(14, 27, 40, 0.96));
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #daedff;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .status-pill.normal {
+      color: #b7f7d4;
+      background: rgba(68, 221, 147, 0.12);
+    }
+
+    .status-pill.tumor {
+      color: #ffc8ce;
+      background: rgba(255, 135, 145, 0.12);
+    }
+
+    .status-pill.cyst {
+      color: #ffdca8;
+      background: rgba(244, 193, 107, 0.12);
+    }
+
+    .status-pill.stone {
+      color: #d2e8ff;
+      background: rgba(127, 195, 255, 0.12);
+    }
+
+    .result-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .result-class {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(34px, 4.4vw, 48px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      margin-bottom: 14px;
+    }
+
+    .confidence-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #dcecff;
+    }
+
+    .progress-track,
+    .prob-track {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .progress-track {
+      height: 10px;
+    }
+
+    .progress-fill,
+    .prob-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      transition: width 260ms ease;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, var(--accent), #67f0c3);
+    }
+
+    .summary-copy {
+      margin-top: 14px;
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .prob-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .prob-row {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr) 58px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .prob-name {
+      color: #d8e9fa;
+      font-weight: 600;
+    }
+
+    .prob-track {
+      height: 8px;
+    }
+
+    .prob-fill {
+      background: linear-gradient(90deg, rgba(59, 209, 255, 0.42), rgba(59, 209, 255, 0.98));
+    }
+
+    .prob-value {
+      text-align: right;
+      color: #c6daee;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .assistant-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .assistant-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .assistant-head p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .assistant-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .quick-question {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: #dcecff;
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .quick-question:hover {
+      background: rgba(59, 209, 255, 0.10);
+      transform: translateY(-1px);
+    }
+
+    .chat-shell {
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(9, 18, 28, 0.98), rgba(8, 17, 26, 0.98));
+    }
+
+    .chat-messages {
+      height: 260px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 11px 13px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      color: #dceeff;
+      background: rgba(255, 255, 255, 0.05);
+      border-top-left-radius: 8px;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      color: #04101a;
+      background: linear-gradient(135deg, rgba(59, 209, 255, 0.94), rgba(21, 150, 220, 0.96));
+      font-weight: 600;
+      border-top-right-radius: 8px;
+    }
+
+    .chat-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(7, 15, 23, 0.96);
+    }
+
+    .chat-form input {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-form button {
+      border: none;
+      border-radius: 999px;
+      padding: 0 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #03101a;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1080px) {
+      .topbar,
+      .main-grid,
+      .upload-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .meta-stack {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        display: grid;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 12px 18px;
+      }
+
+      .brand-panel,
+      .snapshot-panel,
+      .card {
+        padding: 16px;
+      }
+
+      .brand-title {
+        font-size: 40px;
+      }
+
+      .drop-zone h3 {
+        font-size: 24px;
+      }
+
+      .snapshot-grid,
+      .meta-stack {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .chat-messages {
+        height: 220px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .snapshot-grid,
+      .meta-stack {
+        grid-template-columns: 1fr;
+      }
+
+      .prob-row {
+        grid-template-columns: 60px minmax(0, 1fr) 54px;
+      }
+
+      .chat-form {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-form button {
+        height: 44px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="app-shell">
+    <section class="topbar">
+      <div class="brand-panel">
+        <div class="brand-row">
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span>Renalyze clinical AI workspace</span>
+          </div>
+          <div class="support-chip">Decision-support interface</div>
+        </div>
+        <h1 class="brand-title">
+          Renalyze
+          <span>Kidney Scan Classifier</span>
+        </h1>
+        <p class="brand-copy">
+          Upload a kidney scan, run live inference with your trained custom CNN, review class probabilities,
+          and ask the assistant for a plain-language explanation without leaving the same screen.
+        </p>
+        <div class="quick-stats">
+          <div class="mini-chip">Architecture<strong>Custom CNN</strong></div>
+          <div class="mini-chip">Validation<strong>{{ metrics.val_accuracy }}</strong></div>
+          <div class="mini-chip">Test Accuracy<strong>{{ metrics.test_accuracy }}</strong></div>
+          <div class="mini-chip">Input Size<strong>{{ metrics.image_size }}</strong></div>
+        </div>
+      </div>
 
-    <h1>Dark Mode Test Page</h1>
-    <p>If you can see this text clearly, your dark background is working.</p>
+      <aside class="snapshot-panel">
+        <h2>Model snapshot</h2>
+        <div class="snapshot-grid">
+          <div class="snapshot-item">
+            <span>Classes</span>
+            <strong>{{ metrics.classes }}</strong>
+          </div>
+          <div class="snapshot-item">
+            <span>Target Labels</span>
+            <strong>4-way</strong>
+          </div>
+          <div class="snapshot-item">
+            <span>Inference Mode</span>
+            <strong>Live API</strong>
+          </div>
+          <div class="snapshot-item">
+            <span>Output</span>
+            <strong>Class + confidence</strong>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-    <button onclick="alert('Test Successful!')">Test Button</button>
+    <section class="main-grid">
+      <div class="card">
+        <div class="section-head">
+          <h2>Upload scan</h2>
+          <div class="badge">Classes: Cyst, Normal, Stone, Tumor</div>
+        </div>
 
+        <div class="upload-grid">
+          <label id="dropZone" class="drop-zone">
+            <div class="drop-icon">+</div>
+            <h3>Drop a PNG or JPG kidney scan</h3>
+            <p>
+              Preview the image, send it to the Flask backend, and receive the real model prediction with confidence and
+              per-class probabilities.
+            </p>
+            <div class="action-row">
+              <span class="button button-secondary">Browse image</span>
+              <button type="button" id="analyzeBtn" class="button button-primary">Run live analysis</button>
+            </div>
+            <input id="fileInput" type="file" accept="image/png,image/jpeg,image/jpg">
+          </label>
+
+          <div class="meta-stack">
+            <div class="meta-card">
+              <span>File name</span>
+              <strong id="fileName">No file selected</strong>
+            </div>
+            <div class="meta-card">
+              <span>File size</span>
+              <strong id="fileSize">-</strong>
+            </div>
+            <div class="meta-card">
+              <span>Run status</span>
+              <strong id="runStatus">Idle</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-box">
+          <div id="previewPlaceholder" class="preview-placeholder">
+            <strong>Awaiting scan</strong>
+            Upload an image to preview it here before inference.
+          </div>
+          <img id="previewImage" alt="Uploaded kidney scan preview">
+        </div>
+
+        <p class="note">
+          The prediction output is intended for decision support and should be interpreted alongside radiology review and clinical context.
+        </p>
+      </div>
+
+      <div class="right-stack">
+        <div class="card">
+          <div class="section-head">
+            <h2>AI prediction</h2>
+            <div class="badge">Live backend response</div>
+          </div>
+
+          <div class="result-hero">
+            <div class="result-top">
+              <div id="statusPill" class="status-pill">Waiting for scan</div>
+              <div id="inferenceChip" class="badge">Inference: -</div>
+            </div>
+
+            <div class="result-label">Predicted class</div>
+            <div id="resultClass" class="result-class">-</div>
+
+            <div class="confidence-header">
+              <span>Confidence score</span>
+              <strong id="confidenceText">0.00%</strong>
+            </div>
+            <div class="progress-track">
+              <div id="confidenceBar" class="progress-fill"></div>
+            </div>
+
+            <div id="explanationCard" class="summary-copy">
+              Run an analysis to generate a real prediction summary from the backend.
+            </div>
+          </div>
+
+          <div class="prob-grid">
+            <div class="prob-row">
+              <div class="prob-name">Cyst</div>
+              <div class="prob-track"><div id="prob-Cyst" class="prob-fill"></div></div>
+              <div id="val-Cyst" class="prob-value">0.00%</div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-name">Normal</div>
+              <div class="prob-track"><div id="prob-Normal" class="prob-fill"></div></div>
+              <div id="val-Normal" class="prob-value">0.00%</div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-name">Stone</div>
+              <div class="prob-track"><div id="prob-Stone" class="prob-fill"></div></div>
+              <div id="val-Stone" class="prob-value">0.00%</div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-name">Tumor</div>
+              <div class="prob-track"><div id="prob-Tumor" class="prob-fill"></div></div>
+              <div id="val-Tumor" class="prob-value">0.00%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card assistant-card">
+          <div class="assistant-head">
+            <div>
+              <h2>Renalyze Assistant</h2>
+              <p>Ask about the current result, confidence level, or what each class means.</p>
+            </div>
+            <div class="assistant-tools">
+              <button class="quick-question" type="button" data-question="Explain the current prediction in simple words.">Explain result</button>
+              <button class="quick-question" type="button" data-question="What does this confidence score mean?">Confidence help</button>
+              <button class="quick-question" type="button" data-question="What should be the next step after this prediction?">Next steps</button>
+            </div>
+          </div>
+
+          <div class="chat-shell">
+            <div id="chatMessages" class="chat-messages">
+              <div class="message bot">Upload a scan and run analysis. I can then explain the prediction, confidence, class probabilities, and suggested next steps.</div>
+            </div>
+            <form id="chatForm" class="chat-form">
+              <input id="chatInput" type="text" placeholder="Ask about the prediction or confidence">
+              <button type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const dropZone = document.getElementById("dropZone");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const previewImage = document.getElementById("previewImage");
+    const previewPlaceholder = document.getElementById("previewPlaceholder");
+    const fileName = document.getElementById("fileName");
+    const fileSize = document.getElementById("fileSize");
+    const runStatus = document.getElementById("runStatus");
+    const resultClass = document.getElementById("resultClass");
+    const confidenceText = document.getElementById("confidenceText");
+    const confidenceBar = document.getElementById("confidenceBar");
+    const statusPill = document.getElementById("statusPill");
+    const inferenceChip = document.getElementById("inferenceChip");
+    const explanationCard = document.getElementById("explanationCard");
+    const chatMessages = document.getElementById("chatMessages");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const quickQuestions = document.querySelectorAll(".quick-question");
+
+    const probabilityClasses = ["Cyst", "Normal", "Stone", "Tumor"];
+    let currentFile = null;
+    let currentPrediction = null;
+
+    function formatBytes(size) {
+      if (!size) return "-";
+      const units = ["B", "KB", "MB", "GB"];
+      let value = size;
+      let unitIndex = 0;
+      while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024;
+        unitIndex += 1;
+      }
+      return `${value.toFixed(value >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+    }
+
+    function addMessage(text, role = "bot") {
+      const message = document.createElement("div");
+      message.className = `message ${role}`;
+      message.textContent = text;
+      chatMessages.appendChild(message);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function setStatus(label, className = "") {
+      statusPill.textContent = label;
+      statusPill.className = "status-pill";
+      if (className) {
+        statusPill.classList.add(className.toLowerCase());
+      }
+    }
+
+    function resetResultView() {
+      currentPrediction = null;
+      resultClass.textContent = "-";
+      confidenceText.textContent = "0.00%";
+      confidenceBar.style.width = "0%";
+      inferenceChip.textContent = "Inference: -";
+      explanationCard.textContent = "Run an analysis to generate a real prediction summary from the backend.";
+      setStatus("Waiting for scan");
+
+      probabilityClasses.forEach((className) => {
+        document.getElementById(`prob-${className}`).style.width = "0%";
+        document.getElementById(`val-${className}`).textContent = "0.00%";
+      });
+    }
+
+    function setPreview(file) {
+      currentFile = file;
+      fileName.textContent = file.name;
+      fileSize.textContent = formatBytes(file.size);
+      runStatus.textContent = "Ready for analysis";
+      resetResultView();
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        previewImage.src = event.target.result;
+        previewImage.style.display = "block";
+        previewPlaceholder.style.display = "none";
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function buildSummary(prediction) {
+      const lead = `${prediction.class} is currently the strongest class at ${prediction.confidence_percent.toFixed(2)}% confidence.`;
+      const ranked = probabilityClasses
+        .map((className) => ({
+          className,
+          value: prediction.probabilities[className] || 0
+        }))
+        .sort((a, b) => b.value - a.value)
+        .slice(1, 3)
+        .map((item) => `${item.className} ${ (item.value * 100).toFixed(2)}%`)
+        .join(", ");
+
+      if (!ranked) {
+        return lead;
+      }
+
+      return `${lead} Secondary probabilities: ${ranked}.`;
+    }
+
+    function renderPrediction(prediction) {
+      currentPrediction = prediction;
+      resultClass.textContent = prediction.class;
+      confidenceText.textContent = `${prediction.confidence_percent.toFixed(2)}%`;
+      confidenceBar.style.width = `${prediction.confidence_percent}%`;
+      inferenceChip.textContent = `Inference: ${prediction.inference_time_ms.toFixed(2)} ms`;
+      explanationCard.textContent = buildSummary(prediction);
+      setStatus(prediction.class, prediction.class);
+
+      probabilityClasses.forEach((className) => {
+        const percent = ((prediction.probabilities[className] || 0) * 100).toFixed(2);
+        document.getElementById(`prob-${className}`).style.width = `${percent}%`;
+        document.getElementById(`val-${className}`).textContent = `${percent}%`;
+      });
+    }
+
+    async function runPrediction() {
+      if (!currentFile) {
+        addMessage("Please upload a scan before running analysis.");
+        return;
+      }
+
+      runStatus.textContent = "Running model inference";
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = "Analyzing...";
+      setStatus("Analyzing");
+      explanationCard.textContent = "The backend is processing the uploaded scan.";
+
+      const formData = new FormData();
+      formData.append("image", currentFile);
+
+      try {
+        const response = await fetch("/predict", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "Prediction failed.");
+        }
+
+        renderPrediction(data);
+        runStatus.textContent = "Analysis complete";
+        addMessage(`Prediction complete. The model classified this scan as ${data.class} with ${data.confidence_percent.toFixed(2)}% confidence.`);
+      } catch (error) {
+        runStatus.textContent = "Analysis failed";
+        setStatus("Prediction failed");
+        explanationCard.textContent = error.message;
+        addMessage(error.message);
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = "Run live analysis";
+      }
+    }
+
+    async function sendChat(message) {
+      addMessage(message, "user");
+
+      try {
+        const response = await fetch("/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message,
+            prediction: currentPrediction
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "Chat request failed.");
+        }
+
+        addMessage(data.reply, "bot");
+      } catch (error) {
+        addMessage(error.message, "bot");
+      }
+    }
+
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        setPreview(file);
+      }
+    });
+
+    dropZone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dropZone.classList.add("dragging");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragging");
+    });
+
+    dropZone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      dropZone.classList.remove("dragging");
+      const file = event.dataTransfer.files[0];
+      if (file) {
+        fileInput.files = event.dataTransfer.files;
+        setPreview(file);
+      }
+    });
+
+    dropZone.addEventListener("click", (event) => {
+      if (event.target === analyzeBtn) {
+        return;
+      }
+      fileInput.click();
+    });
+
+    analyzeBtn.addEventListener("click", runPrediction);
+
+    chatForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const message = chatInput.value.trim();
+      if (!message) {
+        return;
+      }
+
+      chatInput.value = "";
+      await sendChat(message);
+    });
+
+    quickQuestions.forEach((button) => {
+      button.addEventListener("click", async () => {
+        await sendChat(button.dataset.question);
+      });
+    });
+  </script>
 </body>
-
 </html>
